@@ -11,10 +11,8 @@
 //       This program implements a class that allows a linked list to be used just like 
 //       an array. It overloads the "[]" (square brackets) to simulate accessing seperate 
 //       array elements, but really it traverses the list to find the specified node using
-//       an index value. It also overloads the "+" and "-" signs allowing a user to "add"
-//       or "push" items onto the end of the list, as well as "pop" items off the end of our 
-//       array. This class is not meant to replace the STL vector library, its simply a project
-//       to introduce the beginnings of creating complex / abstract data types. 
+//       an index value. It also overloads the "+" sign allowing a user to "add"
+//       or "push" items onto the end of the list.
 //       
 // Usage: 
 //      - $ ./main filename
@@ -54,29 +52,36 @@ struct Node
  *      This class allows a linked list to be used as an array.
  * 
  * Public Methods:
- *                      List()
- *          void        Push(int)
- *          void        Insert(int)
- *          void        PrintTail()
- *          string      Print()
- *          int         Pop()
- *          List        operator+(const List &Rhs)
- *          int         operator[](int index)
- *          friend      ostream &operator<<(ostream &os, List L)
+ *                           List()
+ *          void             Push(int)
+ *          void             Insert(int)
+ *          void             PrintTail()
+ *          string           Print()
+ *          int              Pop()
+ *          List             operator+(const List &Rhs)
+ *          int              operator[](int)
+ *          friend ostream   &operator<<(ostream &, List)
  *         
  * Private Methods:
  * 
  * Usage: 
  * 
- *      - examples of how
- *      - to use your class 
+ *      Push(int 2);          //append node with value 2 
+ *      Insert(int 3);        //insert node with  value of three to 
+ *                            // a specific point in list
+ *      PrintTail();          //print value in last node
+ *      Print();              //prints all vallues in list
+ *      Pop();                //
+ *      L3 = L1 + L2;         //combine L1 and L2 into L3 list
+ *      L3[5]                 //return value in position 6
+ *      cout << L3;           //prints all values in L3
  *      
  */
 class List
 {
   private:
-    Node *Head;   //pointer to hold position of list head
-    Node *Tail;   //pointer to hold position of list tail
+    Node *Head;   //list head
+    Node *Tail;   //list tail
     int Size;     //list size
 
   public:
@@ -273,11 +278,11 @@ class List
      * Public: operator<<
      * 
      * Description:
-     *      prints list by 
+     *      prints list by using overloaded "<<" operator
      * 
      * Params:
      *      ostream &os:  
-     *      List L :  
+     *      List L :  instance of list to be printed
      * 
      * Returns:
      *      ostream &os:  
