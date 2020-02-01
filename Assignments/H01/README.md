@@ -21,7 +21,7 @@
 
 #### Class Variable
 
-> .....
+> A class variable is any variable declared with the static modifier of which a single copy exists, regardless of how many instances of the class exist
 
 #### Composition
 
