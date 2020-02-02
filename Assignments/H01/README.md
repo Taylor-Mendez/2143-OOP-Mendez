@@ -30,7 +30,7 @@
 #### Encapsulation
 
 > Encapsulation is a process of combining data members and functions in a single unit called class
-><img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cpp.thiyagaraaj.com%2Fhome%2Fblog-1%2Fdatahidingandencapsulation&psig=AOvVaw3FjdIVxLYHGB75AYSTu7cv&ust=1580689338962000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPjouefMsecCFQAAAAAdAAAAABAr">
+><img src="https://www.cpp.thiyagaraaj.com/cms/assets/cimages/encapsulation.png" width=400>
 
 #### Friends
 
