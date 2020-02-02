@@ -25,11 +25,12 @@
 
 #### Composition
 
-> .....
+> The process of making one class a data member of another class. Composition is a "has a" relationship
 
 #### Encapsulation
 
-> .....
+> Encapsulation is a process of combining data members and functions in a single unit called class
+><img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cpp.thiyagaraaj.com%2Fhome%2Fblog-1%2Fdatahidingandencapsulation&psig=AOvVaw3FjdIVxLYHGB75AYSTu7cv&ust=1580689338962000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCPjouefMsecCFQAAAAAdAAAAABAr">
 
 #### Friends
 
