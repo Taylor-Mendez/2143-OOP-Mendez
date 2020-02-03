@@ -34,23 +34,25 @@
 
 #### Friends
 
-> .....
+> Friend class: A friend class can access private and protected members of other class in which it is declared as friend. It is sometimes useful to allow a particular class to access private members of other class
+> Friend function: A friend function can be given special grant to access private and protected members (a friend function can be a method of another class or a global function)
+> Important note on friend functions and classes: (1) Friendship is not mutual (2) Friendship is not inherited
 
 #### Inheritance
 
-> .....
+> Allows user to create a new class (derived class) from an existing class(base class). The derived class inherits all the features from the base class and can have additional features of its own
 
 #### Instance Variable
 
-> .....
+> Instance variables are non-static variables and are declared in a class outside any method, constructor or block. As instance variables are declared in a class, these variables are created when an object of the class is created and destroyed when the object is destroyed
 
 #### Member Variable
 
-> .....
+> In object-oriented programming, a member variable is a variable that is associated with a specific object, and accessible for all its methods
 
 #### Method
 
-> .....
+> A method in object-oriented programming is a procedure associated with a class. A method defines the behavior of the objects that are created from the class
 
 #### Multiple Inheritance
 
