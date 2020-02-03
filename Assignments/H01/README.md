@@ -12,7 +12,7 @@
 
 #### Attributes/properties
 
-> .....
+> Attributes store information about the instance. Properties are special values that are included within a class/object, usually (depending on the language being used) set using get or set method calls. These are often thought of as a special case that is "in between" a regular data member and a method
 
 #### Class
 
@@ -56,24 +56,24 @@
 
 #### Multiple Inheritance
 
-> .....
+> Multiple inheritance is a feature of some object-oriented computer programming languages in which an object or class can inherit characteristics and features from more than one parent object or parent class
 
 #### Object
 
-> .....
+> An instance of a class
 
 #### Overloading
 
-> .....
+> Allows you to specify more than one definition for a function name or an operator in the same scope. An overloaded declaration is a declaration that is declared with the same name as a previously declared declaration in the same scope, except that both declarations have different arguments and different definition 
 
 #### Polymorphism
 
-> .....
+> Polymorphism is the ability to use an operator or method in different ways. Polymorphism gives different meaning or functions to the operators or methods
 
 #### Public/Private/Protected
 
-> .....
+> Private members are accessible within the same class in which they are declared. Protected members are accessible within the same class and within the derived/sub/child class (protected members cannot be accessed through the friend function). A public member is accessible from anywhere outside the class but within a program. You can set and get the value of public variables without any member.
 
 #### Virtual
 
-> .....
+> A virtual function a member function which is declared within a base class and is re-defined(Overriden) by a derived class. When you refer to a derived class object using a pointer or a reference to the base class, you can call a virtual function for that object and execute the derived class’s version of the function. Virtual functions cannot be static and also cannot be a friend function of another class.
