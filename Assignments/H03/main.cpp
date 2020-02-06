@@ -1,10 +1,10 @@
 ///////////////////////////////////////////////////////////////////////////////
 //
-// Author:           Terry Griffin
-// Email:            terry.griffin@msutexas.edu
+// Author:           Taylor Mendez
+// Email:            tlmendez@my.msutexas.edu
 // Course:           CMPS 2143
 // Semester:         Spring 2020
-// Date:             Jan 28th
+// Date:             02/06/2020
 //
 // Description:
 //    This code adds some improvements to our vector class written in the
