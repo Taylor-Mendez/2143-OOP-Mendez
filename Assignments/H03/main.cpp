@@ -277,9 +277,9 @@ class MyVector {
 
       while (mint) {
         if (asc) {
-          doSwap = (*mint < minv);
+          doSwap = (*mint < minv); // using the overloaded operator(<)
         } else {
-          doSwap = (*mint > minv);
+          doSwap = (*mint > minv); // using the overloaded operator(>)
         }
 
         if (doSwap) {
