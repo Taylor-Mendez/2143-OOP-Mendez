@@ -352,9 +352,4 @@ int main() {
   cout << V4 << endl;
   cout << endl;
   cout << V5 << endl;
-
-  // TEST
-  cout << V2 << endl;
-  V2.Sort();
-  cout << V2 << endl;
 }
