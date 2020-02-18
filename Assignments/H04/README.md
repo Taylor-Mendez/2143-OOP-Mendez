@@ -1,4 +1,4 @@
-## Homework 2 - Poker Game Design
+## Homework 4 - Poker Game Design
 
 - Taylor Mendez
 - 02/18/2020
