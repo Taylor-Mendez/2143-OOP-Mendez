@@ -24,4 +24,4 @@
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
 ### Diagram
-<img src="draw.io.wholething" width="400">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/H04/pokergame.png" width="400">
