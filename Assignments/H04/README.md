@@ -4,24 +4,24 @@
 - 02/18/2020
 - Class: 2143 OOP
 
-#### Classes
-### Card
+### Classes
+#### Card
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-### Deck
+#### Deck
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-### Hand
+#### Hand
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-### Player
+#### Player
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-### Poker Game
+#### Poker Game
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-### Bank
+#### Bank
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
 
-#### Diagram
+### Diagram
 <img src="draw.io.wholething" width="400">
