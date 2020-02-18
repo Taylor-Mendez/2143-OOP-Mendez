@@ -6,7 +6,7 @@
 
 ### Classes
 #### Card
-<img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/H04/Card.pdf" width="150">
 
 #### Deck
 <img src="https://cs.msutexas.edu/~griffin/zcloud/zcloud-files/draw.io.professor.png" width="150">
