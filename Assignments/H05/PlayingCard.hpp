@@ -88,6 +88,19 @@ public:
     void setColors(string fore, string back, string symbol, string number);
 };
 
+/**
+     * Public : setForegroundColor
+     *
+     * Description:
+     *      sets/updates the color of a card foreground
+     *
+     * Params:
+     *      string : represents the color of the card foreground
+     *
+     * Returns:
+     *      None
+     */
+
 void Card::setForegroundColor(string color){
     ForeGround temp;
     if (color == "red")
@@ -99,6 +112,19 @@ void Card::setForegroundColor(string color){
     else 
         color = temp.defaultcolor;
 }
+
+/**
+     * Public : setBackgroundColor
+     *
+     * Description:
+     *      sets/updates the color of a card backgroundground
+     *
+     * Params:
+     *      string : represents the color of the card backgroundground
+     *
+     * Returns:
+     *      None
+     */
 
 void Card::setBackgroundColor(string color){
     BackGround temp;
@@ -112,11 +138,38 @@ void Card::setBackgroundColor(string color){
         backcolor = temp.defaultcolor;
 }
 
+/**
+     * Public : setColors
+     *
+     * Description:
+     *      sets/updates the color of a card foreground and background
+     *
+     * Params:
+     *      string : represents the color of the card foreground
+     *      string : represents the color of the card background
+     *
+     * Returns:
+     *      None
+     */
+
 void Card::setColors(string fore,string back){
     setForegroundColor(fore);
     setBackgroundColor(back);
 
 }
+
+/**
+     * Public : setCharacterColor
+     *
+     * Description:
+     *      sets/updates the color of a card character (i.e. "♠", "♦", "♣", "♥")
+     *
+     * Params:
+     *      string : represents the color of the card character color
+     *
+     * Returns:
+     *      None
+     */
 
 void Card::setCharacterColor(string color){
     ForeGround temp;
@@ -130,6 +183,19 @@ void Card::setCharacterColor(string color){
         charcolor = temp.defaultcolor;
 }
 
+/**
+     * Public : setNumberColor
+     *
+     * Description:
+     *      sets/updates the color of a card number
+     *
+     * Params:
+     *      string : represents the color of the card character color
+     *
+     * Returns:
+     *      None
+     */
+
 void Card::setNumberColor(string color){
     ForeGround temp;
     if (color == "red")
@@ -141,6 +207,23 @@ void Card::setNumberColor(string color){
     else 
         numbercolor = temp.defaultcolor;
 }
+
+/**
+     * Public : setColors
+     *
+     * Description:
+     *      sets/updates all colors of each element of a card including the foreground,
+     *      background, character, and number.
+     *
+     * Params:
+     *      string : represents the color of card foreground
+     *      string : represents color of background
+     *      string : represents the color of the card character color
+     *      string : represents the color of the card number
+     *
+     * Returns:
+     *      None
+     */
 
 void Card::setColors(string fore, string back, string symbol, string number){
     setForegroundColor(fore);
@@ -174,13 +257,23 @@ Card::Card(int num) {
 
     // Card labels (could be "Iron Man" or "Charmander" or "Elf" ... anything)
     const string ranks[13] = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
+
+    // instance of ForeGround so that i can assign value to color
+    ForeGround temp;
+    // same for background
+    BackGround  temp2;
+
     number = num;
     suitNum = number / 13;
     suitChar = suits[suitNum];
-    color = colors[suitNum];   // foreground color
-    backcolor;                 // background color
-    charcolor;                 // character color
-    numbercolor;               // color of numbers on card
+    if (num % 2 == 0)          // foreground color
+        color = temp.red;
+    else
+        color = temp.blue;
+    
+    backcolor =  temp2.black;  // background color
+    charcolor = temp.black;    // character color
+    numbercolor = temp.black;   // color of numbers on card
     rank = number % 13;
     rankChar = ranks[rank];
 }
