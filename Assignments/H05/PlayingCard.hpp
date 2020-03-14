@@ -33,15 +33,16 @@ private:
     // Card labels (could be "Iron Man" or "Charmander" or "Elf" ... anything)
     const string ranks[13] = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
 
-    int suitNum;      // value 0-3 : num index of suit
-    int rank;         // 0-13      : num value of rank
-    int number;       // 1-52      : unique value determines card
-    int value;        // 1-14      : numeric value used for comparison
-    string suitChar;  // "♠", "♦", "♣", "♥"
-    string rankChar;  // Ace, 1 ,2 ,3 ... Q, K
-    string color;     // Spade=blue, Diamond=red, etc.
-    string backcolor; // background color of card
-    string charcolor; // character color of card
+    int suitNum;        // value 0-3 : num index of suit
+    int rank;           // 0-13      : num value of rank
+    int number;         // 1-52      : unique value determines card
+    int value;          // 1-14      : numeric value used for comparison
+    string suitChar;    // "♠", "♦", "♣", "♥"
+    string rankChar;    // Ace, 1 ,2 ,3 ... Q, K
+    string color;       // Spade=blue, Diamond=red, etc.
+    string backcolor;   // background color of card
+    string charcolor;   // character color of card
+    string numbercolor; // color of numbers on card
 
 public:
     struct ForeGround{
@@ -54,7 +55,7 @@ public:
             red = "&12";
             blue = "&15";
             black = "&11";
-            defaultcolor = "&10"
+            defaultcolor = "&10";
         }
     };
     struct BackGround{
@@ -69,7 +70,7 @@ public:
             black = "&10";
             defaultcolor = "&00";
         }
-    }
+    };
     friend ostream;
 
     Card(int);
@@ -88,36 +89,66 @@ public:
 };
 
 void Card::setForegroundColor(string color){
+    ForeGround temp;
     if (color == "red")
-        color = ForeGround.red;
+        color = temp.red;
     else if (color == "blue")
-        color = ForeGround.blue;
+        color = temp.blue;
     else if (color == "black")
-        color = ForeGround.black;
+        color = temp.black;
     else 
-        color = ForeGround.defaultcolor;
-
+        color = temp.defaultcolor;
 }
 
 void Card::setBackgroundColor(string color){
+    BackGround temp;
     if (color == "red")
-        backcolor = ForeGround.red;
+        backcolor = temp.red;
     else if (color == "blue")
-        backcolor = ForeGround.blue;
+        backcolor = temp.blue;
     else if (color == "black")
-        backcolor = ForeGround.black;
+        backcolor = temp.black;
     else 
-        backcolor = ForeGround.defaultcolor;
+        backcolor = temp.defaultcolor;
 }
 
 void Card::setColors(string fore,string back){
     setForegroundColor(fore);
     setBackgroundColor(back);
+
 }
 
-void setCharacterColor(string color){
-    charcolor = setForegroundColor(color);
+void Card::setCharacterColor(string color){
+    ForeGround temp;
+    if (color == "red")
+        charcolor = temp.red;
+    else if (color == "blue")
+        charcolor = temp.blue;
+    else if (color == "black")
+        charcolor = temp.black;
+    else 
+        charcolor = temp.defaultcolor;
 }
+
+void Card::setNumberColor(string color){
+    ForeGround temp;
+    if (color == "red")
+        numbercolor = temp.red;
+    else if (color == "blue")
+        numbercolor = temp.blue;
+    else if (color == "black")
+        numbercolor = temp.black;
+    else 
+        numbercolor = temp.defaultcolor;
+}
+
+void Card::setColors(string fore, string back, string symbol, string number){
+    setForegroundColor(fore);
+    setBackgroundColor(back);
+    setCharacterColor(symbol);
+    setNumberColor(number);
+}
+
 
 /**
      * Public : Card
@@ -141,20 +172,15 @@ Card::Card(int num) {
 
     const string suits[4] = {"♠", "♦", "♣", "♥"};
 
-    // Black background        blue ,  red , blue , red
-    const string colors2[4] = {"&60", "&20", "&60", "&20"};
-
-    // Colored background      blue  , red  , blue , red
-    const string colors[4] = {"&16", "&12", "&16", "&12"};
-
     // Card labels (could be "Iron Man" or "Charmander" or "Elf" ... anything)
     const string ranks[13] = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"};
     number = num;
     suitNum = number / 13;
     suitChar = suits[suitNum];
-    color = colors[suitNum];
-    backcolor;            // not sure what to do yet 
-    charcolor;            // not sure what to do yet
+    color = colors[suitNum];   // foreground color
+    backcolor;                 // background color
+    charcolor;                 // character color
+    numbercolor;               // color of numbers on card
     rank = number % 13;
     rankChar = ranks[rank];
 }
