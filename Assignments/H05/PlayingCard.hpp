@@ -266,10 +266,10 @@ Card::Card(int num) {
     number = num;
     suitNum = number / 13;
     suitChar = suits[suitNum];
-    if (num % 2 == 0)          // foreground color
-        color = temp.red;
-    else
+    if (suitNum % 2 == 0)          // foreground color
         color = temp.blue;
+    else
+        color = temp.red;
     
     backcolor =  temp2.black;  // background color
     charcolor = temp.black;    // character color
