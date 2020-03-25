@@ -642,11 +642,11 @@ void WarGame::compare() {
     table1.Add(player1.hand.Remove());
     table2.Add(player2.hand.Remove());
 
-
     if (*(table1.Back()) > *(table2.Back())) {
         // display winner and the cards put on the table
         io << "player1 wins" << "\n";
         io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), true) << "\n";
+
         
         // add cards on the table to the winning hand
         player1.hand.AddFront(table1.Remove());
@@ -659,6 +659,7 @@ void WarGame::compare() {
     if (*(table2.Back()) > *(table1.Back())) {
         io << "player2 wins" << "\n";
         io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), true) << "\n";
+
 
         // add cards on the table to the winning hand
         player2.hand.AddFront(table2.Remove());
