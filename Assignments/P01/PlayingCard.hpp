@@ -45,8 +45,6 @@ private:
     string charcolor;   // character color of card
     string numbercolor; // color of numbers on card
 
-    friend class WarGame;          // JUST USING FOR TEST
-
 public:
     struct ForeGround{
         string red;
@@ -78,16 +76,17 @@ public:
 
     Card(int);
     string Repr();
+    string ReprBack();                           // used for displaying cards facedown
     bool operator<(const Card &);
     bool operator>(const Card &);
     bool operator==(const Card &);
     bool operator!=(const Card &);
     bool operator()(const Card &);
     void setForegroundColor(string color);       // set foreground color of card
-    void setBackgroundColor(string color);      // set background color of card
-    void setColors(string fore,string back);      // set fore and back
+    void setBackgroundColor(string color);       // set background color of card
+    void setColors(string fore,string back);     // set fore and back
     void setCharacterColor(string color);        // set symbol color 
-    void setNumberColor(string color);          // set number color
+    void setNumberColor(string color);           // set number color
     void setColors(string fore, string back, string symbol, string number);
 };
 
@@ -307,6 +306,20 @@ string Card::Repr() {
 }
 
 /**
+ * 
+ */
+string Card::ReprBack() {
+    string color = "&10";
+    string s = "";
+    s += color + "┌────┐&00 \n";
+    s += color + "│";
+    s += color + "    " + "│&00 \n";
+    s += color + "└────┘&00 ";
+    return s;
+
+}
+
+/**
  * Public : operator <<
  *
  * Description:
@@ -362,7 +375,7 @@ bool Card::operator()(const Card &rhs) {
 class CardContainer {
 protected:
     Term::IO io;
-    deque<Card *> Cards;      // made cardcontainer a deque instead of a vector
+    deque<Card *> Cards;      // Made cardcontainer a deque instead of a vector
     int RandomIndex();
     struct CardCompare {
         bool operator()(Card *l, Card *r) {
@@ -579,7 +592,7 @@ class Player {
     private:
         Hand hand{0}; 
         string id;
-        friend class WarGame; // may not be the best way to fix the problem
+        friend class WarGame; // May not be the best way to fix the problem
     public:
         Player(int j){
             id = "player" + to_string(j);
@@ -615,7 +628,8 @@ class WarGame {
         Deck D{52};
         Player player1{1};
         Player player2{2};
-        bool flag = true;   // to get out of loop if player has less thatn 4 cards when going to war
+        bool flag = true;   // To get out of loop if player has less thatn 4 cards when going to war
+        Card faceDown{0};   // Card to represent a facedown card
         Term::IO io;
     public:
         void deal();
@@ -627,6 +641,7 @@ class WarGame {
 
 void WarGame::deal() {
     cout << "deal" << endl;
+    D.Shuffle();
     D.Shuffle();
 
 
@@ -642,136 +657,160 @@ void WarGame::compare() {
     table1.Add(player1.hand.Remove());
     table2.Add(player2.hand.Remove());
 
+
+    // Player 1 Wins
     if (*(table1.Back()) > *(table2.Back())) {
-        // display winner and the cards put on the table
-        io << "player1 wins" << "\n";
-        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), true) << "\n";
+        // Display winner and the cards put on the table
+        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+        io << "winner" << "\n";
 
         
-        // add cards on the table to the winning hand
+        // Add cards on the table to the winning hand
         player1.hand.AddFront(table1.Remove());
         player1.hand.AddFront(table2.Remove());
 
-        // display each players number of cards after cards are awarded to the winner
-        io << "cards:" << player1.hand.Size() << "   " << player2.hand.Size() << "\n" << "\n";
+        // Display each players number of cards after cards are awarded to the winner
+        io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n" << "\n";
 
     }
-    if (*(table2.Back()) > *(table1.Back())) {
-        io << "player2 wins" << "\n";
-        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), true) << "\n";
+
+    // Player 2 Wins
+    else if (*(table2.Back()) > *(table1.Back())) {
+        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+        io << "       " << "winner" << "\n";
 
 
-        // add cards on the table to the winning hand
+        // Add cards on the table to the winning hand
         player2.hand.AddFront(table2.Remove());
         player2.hand.AddFront(table1.Remove());
 
-        // display each players number of cards after cards are awarded to the winner
-        io << "cards:" << player1.hand.Size() << "   " << player2.hand.Size() << "\n" << "\n";
+        // Display each players number of cards after cards are awarded to the winner
+        io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n" << "\n";
     }
 
-    if (*(table1.Back()) == *(table2.Back())) {
-        io << "tie" << "\n";
-        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), true);
+    // Payers Tie
+    else {
+        io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+        io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n";
+        io << "    WAR" << "\n" << "\n";
 
-        // go to war
+        // Go to war
+        goToWar();
     }
 }
 
 void WarGame::goToWar() {
 
+    // Check to make sure each player has enough cards to go to war
+    if (player2.hand.Size() < 4) {
+        // put card back in hand
+        while (table1.Size() != 0 || table2.Size() != 0) {
+            player2.hand.Add(table2.Remove());
+            player1.hand.Add(table1.Remove());
+        }
+        flag = false;
+    }
+    else if (player1.hand.Size() < 4) {
+        // put card back in hand
+        while (table1.Size() != 0 || table2.Size() != 0) {
+            player2.hand.Add(table2.Remove());
+            player1.hand.Add(table1.Remove());
+        }
+        flag = false;
+    }
+
+    // Each player has enough so play four cards to the table
+    else {
+
+        for (int i = 0; i < 4; i++) {
+        table1.Add(player1.hand.Remove());
+        table2.Add(player2.hand.Remove());
+        }
+
+        io << Term::fuse((faceDown.ReprBack()), (faceDown.ReprBack()), false);
+        io << Term::fuse((faceDown.ReprBack()), (faceDown.ReprBack()), false);
+        io << Term::fuse((faceDown.ReprBack()), (faceDown.ReprBack()), false);
+
+        // Player 1 Wins
+        if (*(table1.Back()) > *(table2.Back())) {
+            // Display winner and the cards put on the table
+            io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+            io << "winner" << "\n";
+
+            
+            // Add cards on the table to the winning hand
+            while (table1.Size() != 0 || table2.Size() != 0) {
+                player1.hand.AddFront(table1.Remove());
+                player1.hand.AddFront(table2.Remove());
+            }
+
+            // Display each players number of cards after cards are awarded to the winner
+            io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n" << "\n";
+
+        }
+
+        // Player 2 Wins
+        else if (*(table2.Back()) > *(table1.Back())) {
+            io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+            io << "       " << "winner" << "\n";
+
+
+            // Add cards on the table to the winning hand
+            while (table1.Size() != 0 || table2.Size() != 0) {
+                player2.hand.AddFront(table2.Remove());
+                player2.hand.AddFront(table1.Remove());
+            }
+
+            // Display each players number of cards after cards are awarded to the winner
+            io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n" << "\n";
+        }
+
+        // Payers Tie
+        else {
+           io << Term::fuse((*(table1.Back())).Repr(), (*(table2.Back())).Repr(), false);
+           io << "  " << player1.hand.Size() << "      " << player2.hand.Size() << "\n";
+           io << "    WAR" << "\n" << "\n";
+
+           // Go to war
+           goToWar();
+        }
+    }
 }
 
+void WarGame::play() {
+    
+    while (flag && player1.hand.Size() != 0 && player2.hand.Size()) {
+        compare();
+    }
 
-// // void WarGame::displayWinner() {
-// //     Card table1Copy = *(table1.Back());
-// //     Card table2Copy = *(table2.Back());
+    if (!flag) {
+        if (player1.hand.Size() > player2.hand.Size()) {
+            io << "player 2 did not have enough cards to go to war" << "\n";
+            io << "FINAL WINNER" << "\n";
+            io << "------------" << "\n";
+            io << "  player 1  " << "\n";
+        }
+        else {
+            io << "player 1 did not have enough cards to go to war" << "\n";
+            io << "FINAL WINNER" << "\n";
+            io << "------------" << "\n";
+            io << "  player 2  " << "\n";
+            io << "final amounts in each hand:" << "\n";
+            io << "player1: " << player1.hand.Size() << "\n";
+            io << "player2: " << player2.hand.Size() << "\n";
+        }
+    }
 
+    else if (player2.hand.Size() == 0) {
+        io << "FINAL WINNER" << "\n";
+        io << "------------" << "\n";
+        io << "  player 1  " << "\n";
+    }
 
-// // }
-
-// void WarGame::goToWar() {
-//     cout << "WAR" << endl;
-//                                                  // do a couple of checks before actually going to war
-//     if (player1.hand.Size() < 4) {
-//         flag = false;
-//         cout << "FINAL WINNER 2, (player 1 did not have enough cards to go to war)";
-//     }
-
-//     else if (player2.hand.Size() < 4) {
-//         flag = false;
-//         cout << "FINAL WINNER 1, (player 2 did not have enough cards to go to war)";
-//     }
-
-//                                                  // go to war 
-//     else {
-//         for (int i = 0; i < 4; i++) {            // add 4 cards to each table
-//         table1.Add(player1.hand.Remove());
-//         table2.Add(player2.hand.Remove());
-//         }
-
-//         if (table1.Back() > table2.Back()) {
-//             cout << "1 wins" << endl;
-
-//             Card table1Copy = *(table1.Back());
-//             Card table2Copy = *(table2.Back());
-
-//             while (table1.Size() != 0 && table2.Size() != 0) {
-//                 player1.hand.AddFront(table2.Remove());
-//                 player1.hand.AddFront(table1.Remove());
-//             }
-
-//             if (player2.hand.Size() == 0) {
-//             cout << "FINAL WINNER IS 1" << endl;
-//             cout << "-----------------" << endl;
-//             cout << "player 1 cards:" << player1.hand.Size() << endl;
-//             cout << "player 2 cards:" << player2.hand.Size() << endl;
-//             cout << table1Copy.rank;
-//             cout << table2Copy.rank;
-
-//             }
-//         }
-
-//         else if (table1.Back() < table2.Back()) {
-//             cout << "2 wins" << endl;
-
-//             Card table1Copy = *(table1.Back());
-//             Card table2Copy = *(table2.Back());
-
-//             while (table1.Size() != 0 && table2.Size() != 0) {
-//                player2.hand.AddFront(table1.Remove());
-//                player2.hand.AddFront(table2.Remove()); 
-//             }
-
-//             if (player1.hand.Size() == 0) {
-//             cout << "FINAL WINNER IS 2" << endl;
-//             cout << "-----------------" << endl;
-//             cout << "player 1 cards:" << player1.hand.Size() << endl;
-//             cout << "player 2 cards:" << player2.hand.Size() << endl;
-//             cout << table1Copy.rank;
-//             cout << table2Copy.rank;
-//             }
-        
-//             else {
-//                 cout << "tie"; 
-//                 goToWar(); 
-//             } 
-//         }
-//     }
-// }
-
-// void WarGame::play() {
-//     Player winner(0);
-//     deal();
-
-//     while (flag && player1.hand.Size() != 0 && player2.hand.Size() != 0) {
-//         compare();
-//     }
-
-//     // winner = this->determineWinner();
-//     // cout <<"WINNER" << winner.id;
-
-
-//     // this->determineWinner();
-//     // this->displayWinner();
-// }
+    else {
+        io << "FINAL WINNER" << "\n";
+        io << "------------" << "\n";
+        io << "  player 2  " << "\n";
+    }
+}
 

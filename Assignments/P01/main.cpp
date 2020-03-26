@@ -8,15 +8,11 @@ int main() {
 
     Term::IO io;
 
-
     WarGame war;
 
     war.deal();
 
-    // test
-    war.compare();
-    war.compare();
-    war.compare();
+    war.play();
 
     return 0;
 }
