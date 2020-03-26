@@ -1,3 +1,28 @@
+///////////////////////////////////////////////////////////////////////////////
+//                   
+// Author:           Taylor Mendez
+// Email:            tlmendez0302@my.msutexas.edu
+// Label:            P01
+// Title:            PlayingCard.cpp
+// Course:           CMPS 2143
+// Semester:         Spring 2020
+//
+// Description:
+//       This program creates a Card class, CardContainer class, Deck
+//       class, Hand class, Player class, and WarGame class that can be 
+//       used to simulate a game of war where each player plays a card 
+//       which are then compared to one another. The player with the 
+//       highest card wins and gets both cards but if there is a tie the players 
+//       go to war meaning that each player plays four cards to the and 
+//       the last cards played are compared to break tie. If either players hand
+//       is equal to zero then the game is over or if a player does not have enough 
+//       cards to go to war the game is over. If a player did not have enough cards
+//       to go to war the card/cards played to the are returned to player and the 
+//       game is over.
+//
+// Files:            
+//      termio.h :   used for representation of cards
+/////////////////////////////////////////////////////////////////////////////////
 #include "termio.h"
 #include <algorithm> // std::random_shuffle
 #include <iostream>
@@ -517,18 +542,32 @@ void Deck::Print(int columns = 1, bool clear = false) {
     }
 }
 
-/*
- ██╗  ██╗ █████╗ ███╗   ██╗██████╗
- ██║  ██║██╔══██╗████╗  ██║██╔══██╗
- ███████║███████║██╔██╗ ██║██║  ██║
- ██╔══██║██╔══██║██║╚██╗██║██║  ██║
- ██║  ██║██║  ██║██║ ╚████║██████╔╝
- ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝
-*/
+/**
+ * ██╗  ██╗ █████╗ ███╗   ██╗██████╗
+ * ██║  ██║██╔══██╗████╗  ██║██╔══██╗
+ * ███████║███████║██╔██╗ ██║██║  ██║
+ * ██╔══██║██╔══██║██║╚██╗██║██║  ██║
+ * ██║  ██║██║  ██║██║ ╚████║██████╔╝
+ * ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝  ╚═══╝╚═════╝
+ *
+ * Description:
+ *      This class inherits from the CardContainer class. In addition to the methods 
+ *      in the CardContainer this class has methods to add a card to the front on the 
+ *      container.
+ * 
+ * Public Methods:
+ *                          Hand(int)
+ *            void          AddFront(Card *)
+ * 
+ * Usage: 
+ * 
+ *            Hand H(size);                               // Create Instance of Hand
+ *            AddFront(Card *card)                        // Add a card to the front of the hand  
+ */
 
 class Hand : public CardContainer {
     protected:
-        int handsize;
+        int handsize;          // Size of the hand
     public: 
         Hand(int);
         void Print();
@@ -537,23 +576,6 @@ class Hand : public CardContainer {
 
 Hand::Hand(int size) : CardContainer(size) {
     handsize = size;
-}
-
-/*
- *
- * 
- * 
- * 
- * 
- */
-
-void Hand::Print() {
-    Term::IO io;
-    Card temp = *(this->Remove());
-
-    io << temp.Repr();
-
-    using namespace std;
 }
 
 /**
@@ -577,22 +599,37 @@ void Hand::AddFront(Card *card) {
     //currentCount = Cards.size();
 }
 
-/*
- /$$$$$$$  /$$        /$$$$$$  /$$     /$$ /$$$$$$$$ /$$$$$$$ 
-| $$__  $$| $$       /$$__  $$|  $$   /$$/| $$_____/| $$__  $$
-| $$  \ $$| $$      | $$  \ $$ \  $$ /$$/ | $$      | $$  \ $$
-| $$$$$$$/| $$      | $$$$$$$$  \  $$$$/  | $$$$$   | $$$$$$$/
-| $$____/ | $$      | $$__  $$   \  $$/   | $$__/   | $$__  $$
-| $$      | $$      | $$  | $$    | $$    | $$      | $$  \ $$
-| $$      | $$$$$$$$| $$  | $$    | $$    | $$$$$$$$| $$  | $$
-|__/      |________/|__/  |__/    |__/    |________/|__/  |__/
-*/
+/**
+ * /$$$$$$$  /$$        /$$$$$$  /$$     /$$ /$$$$$$$$ /$$$$$$$ 
+ * | $$__  $$| $$       /$$__  $$|  $$   /$$/| $$_____/| $$__  $$
+ * | $$  \ $$| $$      | $$  \ $$ \  $$ /$$/ | $$      | $$  \ $$
+ * | $$$$$$$/| $$      | $$$$$$$$  \  $$$$/  | $$$$$   | $$$$$$$/
+ * | $$____/ | $$      | $$__  $$   \  $$/   | $$__/   | $$__  $$
+ * | $$      | $$      | $$  | $$    | $$    | $$      | $$  \ $$
+ * | $$      | $$$$$$$$| $$  | $$    | $$    | $$$$$$$$| $$  | $$
+ * |__/      |________/|__/  |__/    |__/    |________/|__/  |__/
+ *
+ * Description:
+ *      This class represents a player that contains a hand and string to represent
+ *      the player id. A player can print its id but this class mostly exists to 
+ *      contain the hand of a player.
+ * 
+ * Public Methods:
+ *                          Player(int)
+ *            void          Print()
+ * 
+ * Usage: 
+ * 
+ *            player1(1):            // Create Instance of Player with
+ *                                    // number passed to create id
+ *            Print()                  // Prints player id
+ */
 
 class Player {
     private:
         Hand hand{0}; 
         string id;
-        friend class WarGame; // May not be the best way to fix the problem
+        friend class WarGame;
     public:
         Player(int j){
             id = "player" + to_string(j);
@@ -601,35 +638,51 @@ class Player {
         void print (){
             cout << id;
         }
-        Player& operator=(const Player &player) {
-            hand = player.hand;
-            id = player.id;
-
-            return *this;
-        }
 };
 
-
-/*
- /$$      /$$  /$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$  /$$      /$$ /$$$$$$$$
-| $$  /$ | $$ /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$| $$$    /$$$| $$_____/
-| $$ /$$$| $$| $$  \ $$| $$  \ $$| $$  \__/| $$  \ $$| $$$$  /$$$$| $$      
-| $$/$$ $$ $$| $$$$$$$$| $$$$$$$/| $$ /$$$$| $$$$$$$$| $$ $$/$$ $$| $$$$$   
-| $$$$_  $$$$| $$__  $$| $$__  $$| $$|_  $$| $$__  $$| $$  $$$| $$| $$__/   
-| $$$/ \  $$$| $$  | $$| $$  \ $$| $$  \ $$| $$  | $$| $$\  $ | $$| $$      
-| $$/   \  $$| $$  | $$| $$  | $$|  $$$$$$/| $$  | $$| $$ \/  | $$| $$$$$$$$
-|__/     \__/|__/  |__/|__/  |__/ \______/ |__/  |__/|__/     |__/|________/
-*/
+/**
+ * /$$      /$$  /$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$  /$$      /$$ /$$$$$$$$
+ *| $$  /$ | $$ /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$| $$$    /$$$| $$_____/
+ *| $$ /$$$| $$| $$  \ $$| $$  \ $$| $$  \__/| $$  \ $$| $$$$  /$$$$| $$      
+ *| $$/$$ $$ $$| $$$$$$$$| $$$$$$$/| $$ /$$$$| $$$$$$$$| $$ $$/$$ $$| $$$$$   
+ *| $$$$_  $$$$| $$__  $$| $$__  $$| $$|_  $$| $$__  $$| $$  $$$| $$| $$__/   
+ *| $$$/ \  $$$| $$  | $$| $$  \ $$| $$  \ $$| $$  | $$| $$\  $ | $$| $$      
+ *| $$/   \  $$| $$  | $$| $$  | $$|  $$$$$$/| $$  | $$| $$ \/  | $$| $$$$$$$$
+ *|__/     \__/|__/  |__/|__/  |__/ \______/ |__/  |__/|__/     |__/|________/
+ *
+ * Description:
+ *      This class creates a war game class. The class contains instance of 
+ *      Player, Deck, and CardContainer used to implement war game. A deck of cards 
+ *      is shuffled and deals 26 cards to each player using the deal method. The players 
+ *      then play a card to the table and the card are compared, winner gets both card. If there
+ *      is a tie players go to war and then winner gets all cards.
+ * 
+ * Public Methods:
+ *            void          deal()
+ *            void          compare()
+ *            void          displayWinner()
+ *            void          goToWar()
+ *            void          play()
+ * 
+ * Usage: 
+ * 
+ *            deal()               // shuffles and deal 26 cards to each player      
+ *            compare()            // compares cards played to table by players 
+ *            displayWinner()      // displays the final winner of the game along with amount
+ *                                 // of cards
+ *            goToWar()            // plays four card and then compares last to break tie
+ *            play()               // compares cards until there is a final winner
+ */
 
 class WarGame {
     private:
-        CardContainer table1{0};
-        CardContainer table2{0};
-        Deck D{52};
-        Player player1{1};
+        CardContainer table1{0};   // temporary card container for each player hand to add to
+        CardContainer table2{0};   // temporary card container for each player hand to add to
+        Deck D{52};                // Deck of 52 cards
+        Player player1{1};         
         Player player2{2};
-        bool flag = true;   // To get out of loop if player has less thatn 4 cards when going to war
-        Card faceDown{0};   // Card to represent a facedown card
+        bool flag = true;          // To get out of loop if player has less thatn 4 cards when going to war
+        Card faceDown{0};          // Card to represent a facedown card
         Term::IO io;
     public:
         void deal();
@@ -638,6 +691,19 @@ class WarGame {
         void goToWar();
         void play();
 };
+
+/**
+ * Public : deal
+ * 
+ * Description : 
+ *      Shuffles the deck D and deals out 26 cards to each player
+ * 
+ * Params : 
+ *      none
+ * 
+ * Returns : 
+ *      none
+ */
 
 void WarGame::deal() {
     cout << "deal" << endl;
@@ -653,6 +719,20 @@ void WarGame::deal() {
     }
 }
 
+/**
+ * Public : compare
+ * 
+ * Description : 
+ *      this is the main function of the WarGame. This function compares the last
+ *      card in the players hand and awards card to the winner. if it is a tie 
+ *      the function calls goToWar 
+ * 
+ * Params : 
+ *      none
+ * 
+ * Returns : 
+ *      none
+ */
 void WarGame::compare() {
     table1.Add(player1.hand.Remove());
     table2.Add(player2.hand.Remove());
@@ -699,6 +779,23 @@ void WarGame::compare() {
     }
 }
 
+/**
+ * Public : goToWar
+ * 
+ * Description : 
+ *      this function handles a tie. The function first checks if the player has
+ *      enough card, if the player does not then the cards are given back to the 
+ *      player and the game is ended. If the players have enough cards to go to 
+ *      war then each player plays four cards to the table and then the fourth 
+ *      card is compared. If there is a consecutive war then the function calls itself
+ *      until one person wins
+ * 
+ * Params : 
+ *      none
+ * 
+ * Returns : 
+ *      none
+ */
 void WarGame::goToWar() {
 
     // Check to make sure each player has enough cards to go to war
@@ -777,19 +874,40 @@ void WarGame::goToWar() {
     }
 }
 
+/**
+ * Public : play
+ * 
+ * Description : 
+ *      This function calls the compare function until there is a winner (i.e.
+ *      a player did not have enough cards to go to war or either of the players
+ *      hand is equal to 0). Then the final winner is displayed along with the 
+ *      amount of cards in each players hand
+ * 
+ * Params : 
+ *      none
+ * 
+ * Returns : 
+ *      none
+ */
 void WarGame::play() {
     
     while (flag && player1.hand.Size() != 0 && player2.hand.Size()) {
         compare();
     }
 
+    // Player wins bc other player did not have enough cards to go to war
     if (!flag) {
+        // Player 1 is the winner bc player 2 did not have enough cards
         if (player1.hand.Size() > player2.hand.Size()) {
             io << "player 2 did not have enough cards to go to war" << "\n";
             io << "FINAL WINNER" << "\n";
             io << "------------" << "\n";
             io << "  player 1  " << "\n";
+            io << "final amounts in each hand:" << "\n";
+            io << "player1: " << player1.hand.Size() << "\n";
+            io << "player2: " << player2.hand.Size() << "\n";
         }
+        // Player 2 is the winner bc player 1 did not have enough cards
         else {
             io << "player 1 did not have enough cards to go to war" << "\n";
             io << "FINAL WINNER" << "\n";
@@ -800,17 +918,25 @@ void WarGame::play() {
             io << "player2: " << player2.hand.Size() << "\n";
         }
     }
-
+    
+    // Player 1 is the final winner
     else if (player2.hand.Size() == 0) {
         io << "FINAL WINNER" << "\n";
         io << "------------" << "\n";
         io << "  player 1  " << "\n";
+        io << "final amounts in each hand:" << "\n";
+        io << "player1: " << player1.hand.Size() << "\n";
+        io << "player2: " << player2.hand.Size() << "\n";
     }
 
+    // Player 2 is the final winner
     else {
         io << "FINAL WINNER" << "\n";
         io << "------------" << "\n";
         io << "  player 2  " << "\n";
+        io << "final amounts in each hand:" << "\n";
+        io << "player1: " << player1.hand.Size() << "\n";
+        io << "player2: " << player2.hand.Size() << "\n";
     }
 }
 
