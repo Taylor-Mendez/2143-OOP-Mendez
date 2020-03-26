@@ -29,6 +29,8 @@
 #include <string>
 #include <vector>
 #include <deque>
+#include <ctime> 
+#include <cstdlib>
 
 using namespace std;
 
@@ -707,8 +709,15 @@ class WarGame {
 
 void WarGame::deal() {
     cout << "deal" << endl;
-
+    
+    // shuffle at least once
     D.Shuffle();
+    
+    // shuffle random amount of times
+    srand(time(0));
+    for (int i = 0; i < rand() % 52; i++){
+        D.Shuffle();
+    }
 
     for (int i = 0; i < 52; i++) {
         if (i % 2 ==0)
