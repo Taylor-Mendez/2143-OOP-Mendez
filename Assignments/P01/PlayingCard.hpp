@@ -707,9 +707,8 @@ class WarGame {
 
 void WarGame::deal() {
     cout << "deal" << endl;
+    
     D.Shuffle();
-    D.Shuffle();
-
 
     for (int i = 0; i < 52; i++) {
         if (i % 2 ==0)
