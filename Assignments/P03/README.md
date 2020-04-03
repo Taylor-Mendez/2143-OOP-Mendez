@@ -6,10 +6,10 @@
 
 ### Classes
 
-#### Person
-#### Disease
-#### Population
-#### Community
-#### Position
+- Person
+- Disease
+- Population
+- Community
+- Position
 
 ### Diagram
