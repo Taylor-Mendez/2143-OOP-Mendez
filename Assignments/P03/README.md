@@ -13,3 +13,4 @@
 - Position
 
 ### Diagram
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/modeling%20covid19.png" width="400">
