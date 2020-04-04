@@ -7,15 +7,16 @@
 ### Classes
 
 - Person
-<img src="" width="150">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/Person.PNG" width="150">
 
 - Disease
-<img src="" width="150">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/Disease.PNG" width="150">
+
 - Population
-<img src="" width="150">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/Population.PNG" width="150">
 
 - Community
-<img src="" width="150">
+<img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/Community.PNG" width="150">
 
 - Position
 <img src="https://github.com/Taylor-Mendez/2143-OOP-Mendez/blob/master/Assignments/P03/position.PNG" width="150">
