@@ -11,7 +11,7 @@
 - day_ratio: used to control the ration of loop_count to days 
 - communities: number of communities       (*note: can be an even number from 0-8)
 
-#### in sim subsection of config:
+#### sim subsection of config:
 - social_distancing: bool value to determine whether or not the sprites will be social distancing
 - social_distance: used to increase or decrease the bounding box of each sprite to emulate social distancing
 - infection_radius: 
