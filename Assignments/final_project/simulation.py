@@ -3,65 +3,28 @@ import pygame
 import random
 import math
 import sys,os
+import json
 
 # list of colors
 colors = ["blue", "light_blue", "yellow", "red", "green"]
 
-# list of community number options
-communities = [2, 4, 6, 8]
-
 # list of states
 state = ["susceptible", "infected", "recovered"]
 
-#  /$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$$$ /$$$$$$  /$$$$$$ 
-# /$$__  $$ /$$__  $$| $$$ | $$| $$_____/|_  $$_/ /$$__  $$
-#| $$  \__/| $$  \ $$| $$$$| $$| $$        | $$  | $$  \__/
-#| $$      | $$  | $$| $$ $$ $$| $$$$$     | $$  | $$ /$$$$
-#| $$      | $$  | $$| $$  $$$$| $$__/     | $$  | $$|_  $$
-#| $$    $$| $$  | $$| $$\  $$$| $$        | $$  | $$  \ $$
-#|  $$$$$$/|  $$$$$$/| $$ \  $$| $$       /$$$$$$|  $$$$$$/
-# \______/  \______/ |__/  \__/|__/      |______/ \______/                                                         
+# read in data from config.json
+if os.path.isfile("config.json"):
+    f = open("config.json","r")
+    data = f.read()
+    config = json.loads(data)
+    for key in config:
+        print(config[key])
 
-config = {
-    "sprite": {
-        "width": 8,
-        "height": 20,
-        "speed": 4,
-    },
-    "images": {
-        "blue": "./images/person_blue_64x64.png",
-        "light_blue": "./images/person_light_blue_64x64.png",
-        "red": "./images/person_red_64x64.png",
-        "white": "./images/person_white_64x64.png",
-        "yellow": "./images/person_yellow_64x64.png",
-        "orange": "./images/person_orange_64x64.png",
-        "green": "./images/person_green_64x64.png",
-        "black": "./images/person_black_64x64.png"
-    },
-    "game": {
-        "width": 1200,
-        "height": 800,
-        "day": 0,
-        "fps": 40,
-        "loop_count": 0,
-        "day_ratio": 50,     # used to update day (i.e loop_count % game ration == 0 then update day)
-        "communities": 4    # used to create a certain amount of communites must be even number not greater than 8
-    },
-    "sim": {
-        "social_distancing": True,
-        "social_distance": 4,
-        "infection_radius": 16,
-        "infection_rate": .20,
-        "population_count": 100,
-        "initial_infected_ratio": .01,          # will be used to determine number of initial infected people
-        "initial_susceptible_ratio": .99,       # 
-        "initial_recovered_ratio": .00,         #
-        "pid": 1,
-        "recovery_rate": 14,
-        "percent_selfish": .65,
-        "travel_rate": .30
-    }
-}
+config["sim"]["infection_rate"] = float(config["sim"]["infection_rate"])
+config["sim"]["initial_infected_ratio"] = float(config["sim"]["initial_infected_ratio"])
+config["sim"]["initial_susceptible_ratio"] = float(config["sim"]["initial_susceptible_ratio"])
+config["sim"]["initial_recovered_ratio"] = float(config["sim"]["initial_recovered_ratio"])
+config["sim"]["percent_selfish"] = float(config["sim"]["percent_selfish"])
+config["sim"]["travel_rate"] = float(config["sim"]["travel_rate"])
 
 # /$$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$   /$$$$$$  /$$   /$$
 #| $$__  $$| $$_____/| $$__  $$ /$$__  $$ /$$__  $$| $$$ | $$
@@ -97,6 +60,7 @@ class Person(pygame.sprite.Sprite):
         self.y1 = self.community.gety1()
         self.x2 = self.community.getx2()
         self.y2 = self.community.gety2()
+        self.community_id = self.community.getCommunityId()
 
         # choose sprite direction
         self.dx = 0
@@ -131,6 +95,10 @@ class Person(pygame.sprite.Sprite):
         y = self.y
         r = self.rect 
         return f"Color: {c}, Speed: {s}, X: {x}, Y: {y}, Rect: {r} "
+
+    def printcoords(self):
+        print(self.x)
+        print(self.y)
 
     def setSocialDistance(self,distance):
         self.rect = self.rect.inflate(distance,distance)
@@ -245,6 +213,23 @@ class Person(pygame.sprite.Sprite):
             sides["bottom"] = True
 
         return sides
+    
+    def changeCommunity(self,community):
+        self.community = community
+
+        self.x1 = self.community.getx1()
+        self.y1 = self.community.gety1()
+        self.x2 = self.community.getx2()
+        self.y2 = self.community.gety2()
+
+        self.x = random.randint(int(self.community.getx1()), int(self.community.getx2()))
+        self.y = random.randint(int(self.community.gety1()), int(self.community.gety2()))
+        self.community_id = self.community.getCommunityId()
+
+    def getCommunityId(self):
+        return self.community_id
+
+
 
 
 # /$$$$$$$   /$$$$$$  /$$$$$$$  /$$   /$$ /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
@@ -270,11 +255,11 @@ class Population:
         self.numberOfCommunities = kwargs.get("communities", 4)
         self.infection_rate = kwargs.get("infection_rate", .20)
         self.recover_rate = kwargs.get("recovery_rate", 14)
-        self.social_distancing = kwargs.get("social_distancing", True) # update in main to take argument
-        self.social_distance = kwargs.get("social_distance", 6) # update in main to take argument
-        self.percent_selfish = kwargs.get("percent_selfish", .50) # update in main to take argument
+        self.social_distancing = kwargs.get("social_distancing", True)
+        self.social_distance = kwargs.get("social_distance", 6) 
+        self.percent_selfish = kwargs.get("percent_selfish", .50) 
         self.infection_radius = kwargs.get("infection_radius", 14)
-        self.travel_rate =  kwargs.get("travel_rate", .40)
+        self.travel_rate = kwargs.get("travel_rate", .35)
 
         # print(self.screen)
 
@@ -301,112 +286,18 @@ class Population:
     def populate(self, pos=None, **kwargs):
 
         # need to figure out a better way to assign bounds to communities and people
-        if self.numberOfCommunities == 0:
-            for i in range(self.population_count):
-                community = Community(0,0,self.game_width,self.game_height)
-                self.addPerson(community = community)
-
-        if self.numberOfCommunities == 2:
-            x1 = 0
-            x2 = self.game_width/2
-            x3 = self.game_width
-            y1 = 0
-            y2 = self.game_height
-
-            for i in range(self.population_count):
-                if i % 2 == 0:
-                    community = Community(x1,y1,x2,y2)
-                    self.addPerson(community = community)
-                if i % 2 == 1:
-                    community = Community(x2,y1,x3,y2)
-                    self.addPerson(community = community)
-
-        if self.numberOfCommunities == 4:
-            x1 = 0
-            x2 = self.game_width/2
-            x3 = self.game_width
-            y1 = 0
-            y2 = self.game_height/2
-            y3 = self.game_height
-
-            for i in range(self.population_count):
-                if i % 4 == 0:
-                    community = Community(x1,y1,x2,y2)
-                    self.addPerson(community = community)
-                if i % 4 == 1:
-                    community = Community(x1,y2,x2,y3)
-                    self.addPerson(community = community)
-                if i % 4 == 2:
-                    community = Community(x2,y1,x3,y2)
-                    self.addPerson(community = community)
-                if i % 4 == 3:
-                    community = Community(x2,y2,x3,y3)
-                    self.addPerson(community = community)
-
-        if self.numberOfCommunities == 6:
-            x1 = 0
-            x2 = self.game_width / 3
-            x3 = (self.game_width / 3) * 2
-            x4 = self.game_width
-            y1 = 0
-            y2 = self.game_height/2
-            y3 = self.game_height
-
-            for i in range(self.population_count):
-                if i % 6 == 0:
-                    community = Community(x1,y1,x2,y2)
-                    self.addPerson(community = community)
-                if i % 6 == 1:
-                    community = Community(x2,y1,x3,y2)
-                    self.addPerson(community = community)
-                if i % 6 == 2:
-                    community = Community(x3,y1,x4,y2)
-                    self.addPerson(community = community)
-                if i % 6 == 3:
-                    community = Community(x1,y2,x2,y3)
-                    self.addPerson(community = community)
-                if i % 6 == 4:
-                    community = Community(x2,y2,x3,y3)
-                    self.addPerson(community = community)
-                if i % 6 == 5:
-                    community = Community(x3,y2,x4,y3)
-                    self.addPerson(community = community)
-
-        if self.numberOfCommunities == 8:
-            x1 = 0
-            x2 = self.game_width / 4
-            x3 = (self.game_width / 4) *2
-            x4 = (self.game_width / 4) *3
-            x5 = self.game_width
-            y1 = 0
-            y2 = self.game_height / 2
-            y3 = self.game_height
-
-            for i in range(self.population_count):
-                if i % 8 == 0:
-                    community = Community(x1,y1,x2,y2)
-                    self.addPerson(community = community)
-                if i % 8 == 1:
-                    community = Community(x2,y1,x3,y2)
-                    self.addPerson(community = community)
-                if i % 8 == 2:
-                    community = Community(x3,y1,x4,y2)
-                    self.addPerson(community = community)
-                if i % 8 == 3:
-                    community = Community(x4,y1,x5,y2)
-                    self.addPerson(community = community)
-                if i % 8 == 4:
-                    community = Community(x1,y2,x2,y3)
-                    self.addPerson(community = community)
-                if i % 8 == 5:
-                    community = Community(x2,y2,x3,y3)
-                    self.addPerson(community = community)
-                if i % 8 == 6:
-                    community = Community(x3,y2,x4,y3)
-                    self.addPerson(community = community)
-                if i % 8 == 7:
-                    community = Community(x4,y2,x5,y3)
-                    self.addPerson(community = community)
+        for i in range(self.population_count):
+            if self.numberOfCommunities > 0:
+                community = Community()
+                community_id = i % self.numberOfCommunities
+                community.changeBounds(self.numberOfCommunities,community_id,self.game_width,self.game_height)
+                self.addPerson(community=community)
+            
+            elif self.numberOfCommunities == 0:
+                community = Community()
+                community_id = 0
+                community.changeBounds(self.numberOfCommunities,community_id,self.game_width,self.game_height)
+                self.addPerson(community=community)
 
         # set initial number of specific states
         for j in range(self.population_count):
@@ -433,6 +324,9 @@ class Population:
                 # set up "selfish"
                 if random.random() > self.percent_selfish:
                     self.population[k].setSocialDistance(self.social_distance)
+
+        for k in range(self.population_count):
+            print(self.population[k].getCommunityId())
 
     def addPerson(self, **kwargs):
         color = kwargs.get("color", random.choice(colors))
@@ -500,7 +394,6 @@ class Population:
                                 self.infected += 1
                                 self.susceptible -=1
                                 self.population[i].setLastInfected(day)
-
         
         self.sprite_group.draw(self.screen)
 
@@ -513,16 +406,27 @@ class Population:
                     self.infected -= 1
                     self.recovered +=1
 
-    # def movCommunities(self):
-    #     for i in range(self.population_count):
-    #         if random.random() < self.travel_rate:
-    #             new = random.randint(0,self.population_count)
-    #             self.population[i].setx1(self.population[new].getx1)
-    #             self.population[i].setx2(self.population[new].getx2)
-    #             self.population[i].sety1(self.population[new].gety1)
-    #             self.population[i].sety2(self.population[new].gety2)
-    #             print("TEST")
+    def communityMove(self):
+        if random.random() < self.travel_rate:
+            # get random person to move
+            k = random.randint(0,(self.population_count - 1))
 
+            #print("before")
+            #self.population[k].printcoords()
+            #print(self.population[k].getCommunityId())
+            #print("after")
+
+                                                                                    # get new community number that is not equal to the community in now
+            new_community_id =  random.randint(0,self.numberOfCommunities-1)
+            while new_community_id == self.population[k].getCommunityId():          # make sure its not the same community
+                new_community_id = random.randint(0,self.numberOfCommunities-1)
+
+            self.population[k].setColor(colors[0])
+            new = Community()
+            new.changeBounds(self.numberOfCommunities,new_community_id,self.game_width,self.game_height)
+            self.population[k].changeCommunity(new)
+            self.population[k].printcoords()
+            print(self.population[k].getCommunityId())
 
 #  /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$ /$$   /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$     /$$
 # /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$| $$  | $$| $$$ | $$|_  $$_/|__  $$__/|  $$   /$$/
@@ -534,11 +438,12 @@ class Population:
 # \______/  \______/ |__/     |__/|__/     |__/ \______/ |__/  \__/|______/   |__/       |__/         
 
 class Community(object):
-    def __init__(self,x1,y1,x2,y2):
-        self.x1 = x1
-        self.y1 = y1
-        self.x2 = x2
-        self.y2 = y2
+    def __init__(self):
+        self.x1 = 0
+        self.x2 = 0
+        self.y1 = 0
+        self.y2 = 0
+        self.community_id = 0
 
     def setx1(self,x1):
         self.x1 = x1     
@@ -556,6 +461,120 @@ class Community(object):
         return self.y1
     def gety2(self):
         return self.y2
+    def getCommunityId(self):
+        return self.community_id
+    def changeBounds(self,total,community_id,width,height):
+        self.community_id = community_id
+
+        if total == 0:
+            self.x1 = 0
+            self.x2 = width
+            self.y1 = 0
+            self.y2 = height
+        if total == 2:
+            if community_id == 0:
+                self.x1 = 0
+                self.x2 = width/2
+                self.y1 = 0
+                self.y2 = height
+            elif community_id == 1:
+                self.x1 = width/2
+                self.x2 = width
+                self.y1 = 0
+                self.y2 = height
+        if total == 4:
+            if community_id == 0:
+                self.x1 = 0
+                self.x2 = width/2
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 1:
+                self.x1 = width/2
+                self.x2 = width
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 2:
+                self.x1 = 0
+                self.x2 = width/2
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 3:
+                self.x1 = width/2
+                self.x2 = width
+                self.y1 = height/2
+                self.y2 = height
+        if total == 6:
+            if community_id == 0:
+                self.x1 = 0
+                self.x2 = width/3
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 1:
+                self.x1 = width/3
+                self.x2 = (width/3)*2
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 2:
+                self.x1 = (width/3)*2
+                self.x2 = width
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 3:
+                self.x1 = 0
+                self.x2 = width/3
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 4:
+                self.x1 = width/3
+                self.x2 = (width/3)*2
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 5:
+                self.x1 = (width/3)*2
+                self.x2 = width
+                self.y1 = height/2
+                self.y2 = height
+        if total == 8:
+            if community_id == 0:
+                self.x1 = 0
+                self.x2 = width/4
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 1:
+                self.x1 = width/4
+                self.x2 = (width/4)*2
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 2:
+                self.x1 = (width/4)*2
+                self.x2 = (width/4)*3
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 3:
+                self.x1 = (width/4)*3
+                self.x2 = width
+                self.y1 = 0
+                self.y2 = height/2
+            elif community_id == 4:
+                self.x1 = 0
+                self.x2 = width/4
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 5:
+                self.x1 = width/4
+                self.x2 = (width/4)*2
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 6:
+                self.x1 = (width/4)*2
+                self.x2 = (width/4)*3
+                self.y1 = height/2
+                self.y2 = height
+            elif community_id == 7:
+                self.x1 = (width/4)*3
+                self.x2 = width
+                self.y1 = height/2
+                self.y2 = height
 
 #  /$$$$$$  /$$$$$$ /$$      /$$ /$$   /$$ /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
 # /$$__  $$|_  $$_/| $$$    /$$$| $$  | $$| $$       /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
@@ -577,7 +596,7 @@ class Community(object):
 #| $$     |  $$$$$$/| $$ \  $$   | $$   | $$  | $$| $$$$$$$$| $$$$$$$$| $$      | $$$$$$$$| $$  | $$
 #|__/      \______/ |__/  \__/   |__/   |__/  |__/|________/|________/|__/      |________/|__/  |__/
 
-# need to pu all these methods into a class
+# need to put all these methods into a class
                                                                                                    
 def messageDisplay(text,screen):
     mediumText = pygame.font.Font('./fonts/LeagueSpartan-Bold.otf', 22)
@@ -697,6 +716,7 @@ if __name__ == '__main__':
         if config["game"]["loop_count"] % config["game"]["day_ratio"] == 0:
             config["game"]["day"] +=1
             print(config["game"]["day"])
+            pop.communityMove()
 
 
 
