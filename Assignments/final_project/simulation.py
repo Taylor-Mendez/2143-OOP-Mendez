@@ -243,9 +243,9 @@ class Population:
         self.population_count = kwargs.get("population_count", 10)
         self.sprite_group = pygame.sprite.Group()
         self.screen = kwargs.get("screen", None)
-        self.susceptible = int((self.population_count) * kwargs.get("initial_susceptible_ratio", .99))
-        self.infected = int((self.population_count) * kwargs.get("initial_infected_ratio", .01))
-        self.recovered = int((self.population_count) * kwargs.get("initial_recovered_ratio", .00))
+        self.susceptible = int(self.population_count * config["sim"]["initial_susceptible_ratio"])
+        self.infected = int(self.population_count * config["sim"]["initial_infected_ratio"])
+        self.recovered = int(self.population_count * config["sim"]["initial_recovered_ratio"])
         self.numberOfCommunities = kwargs.get("communities", 4)
         self.infection_rate = kwargs.get("infection_rate", .20)
         self.recover_rate = kwargs.get("recovery_rate", 14)
@@ -255,9 +255,8 @@ class Population:
         self.infection_radius = kwargs.get("infection_radius", 14)
         self.travel_rate = kwargs.get("travel_rate", .35)
 
-        # print(self.screen)
-
-        # print(self.susceptible)
+        #print(self.screen)
+        print(self.susceptible)
 
         if self.screen == None:
             print(
@@ -294,23 +293,35 @@ class Population:
                 self.addPerson(community=community)
 
         # set initial number of specific states
+        # for j in range(self.population_count):
+        #     if j < self.susceptible:
+        #         color = colors[4]
+        #         state = "susceptible"
+        #         self.population[j].setColor(color) 
+        #         self.population[j].setState(state)
+        #     elif j >= self.susceptible and j < (self.susceptible + self.recovered):
+        #         color = colors[2]
+        #         state = "recovered"
+        #         self.population[j].setColor(color) 
+        #         self.population[j].setState(state)
+        #     elif j >= (self.susceptible + self.recovered) and j <= (self.susceptible + self.recovered + self.infected):
+        #         color = colors[3]
+        #         state = "infected"
+        #         self.population[j].setColor(color) 
+        #         self.population[j].setState(state) 
+        #         self.population[j].setInitialLastInfected()
+
         for j in range(self.population_count):
-            if j < self.susceptible:
-                color = colors[4]
-                state = "susceptible"
-                self.population[j].setColor(color) 
-                self.population[j].setState(state)
-            elif j >= self.susceptible and j < (self.susceptible + self.recovered):
-                color = colors[2]
-                state = "recovered"
-                self.population[j].setColor(color) 
-                self.population[j].setState(state)
-            elif j >= (self.susceptible + self.recovered) and j <= (self.susceptible + self.recovered + self.infected):
-                color = colors[3]
-                state = "infected"
-                self.population[j].setColor(color) 
-                self.population[j].setState(state) 
+            if j < int(self.population_count * config["sim"]["initial_recovered_ratio"]):
+                self.population[j].setColor(colors[2])
+                self.population[j].setState(state[2])
+            elif j>= int(self.population_count * config["sim"]["initial_recovered_ratio"]) and j < int((self.population_count * config["sim"]["initial_recovered_ratio"]) + (self.population_count * config["sim"]["initial_infected_ratio"])):
+                self.population[j].setColor(colors[3])
+                self.population[j].setState(state[1])
                 self.population[j].setInitialLastInfected()
+            else:
+                self.population[j].setState(state[0])
+                self.population[j].setColor(colors[4])
 
         # set up social distancing
         if self.social_distancing == True:
@@ -632,9 +643,6 @@ if __name__ == '__main__':
                      width=config["game"]["width"],
                      height=config["game"]["height"],
                      population_count=config["sim"]["population_count"],
-                     initial_suscesptible_ratio=config["sim"]["initial_susceptible_ratio"],
-                     initial_recovered_ratio=config["sim"]["initial_recovered_ratio"],
-                     initial_infected_ratio=config["sim"]["initial_infected_ratio"],
                      communities=config["game"]["communities"],
                      day = config["game"]["day"],
                      recovery_rate = config["sim"]["recovery_rate"],
