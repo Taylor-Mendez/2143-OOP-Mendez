@@ -21,20 +21,20 @@
         "fps": 40,
         "loop_count": 0,
         "day_ratio": 50,
-        "communities": 8   
+        "communities": 2   
     },
     "sim": {
         "social_distancing": true,
-        "social_distance": 4,
-        "infection_radius": 16,
-        "infection_rate": ".25",
+        "social_distance": 3,
+        "infection_radius": 14,
+        "infection_rate": 0.25,
         "population_count": 100,
-        "initial_infected_ratio": ".01",
-        "initial_susceptible_ratio": ".99",
-        "initial_recovered_ratio": ".00",
+        "initial_infected_ratio": 0.01,
+        "initial_susceptible_ratio": 0.99,
+        "initial_recovered_ratio": 0,
         "pid": 1,
         "recovery_rate": 14,
-        "percent_selfish": ".65",
-        "travel_rate": ".30"
+        "percent_selfish": 0.65,
+        "travel_rate": 0.04
     }
 }

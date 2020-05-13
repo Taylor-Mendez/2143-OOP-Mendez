@@ -19,12 +19,6 @@ if os.path.isfile("config.json"):
     for key in config:
         print(config[key])
 
-config["sim"]["infection_rate"] = float(config["sim"]["infection_rate"])
-config["sim"]["initial_infected_ratio"] = float(config["sim"]["initial_infected_ratio"])
-config["sim"]["initial_susceptible_ratio"] = float(config["sim"]["initial_susceptible_ratio"])
-config["sim"]["initial_recovered_ratio"] = float(config["sim"]["initial_recovered_ratio"])
-config["sim"]["percent_selfish"] = float(config["sim"]["percent_selfish"])
-config["sim"]["travel_rate"] = float(config["sim"]["travel_rate"])
 
 # /$$$$$$$  /$$$$$$$$ /$$$$$$$   /$$$$$$   /$$$$$$  /$$   /$$
 #| $$__  $$| $$_____/| $$__  $$ /$$__  $$ /$$__  $$| $$$ | $$
@@ -306,16 +300,16 @@ class Population:
                 state = "susceptible"
                 self.population[j].setColor(color) 
                 self.population[j].setState(state)
-            if j >= self.susceptible and j < (self.susceptible + self.recovered):
+            elif j >= self.susceptible and j < (self.susceptible + self.recovered):
                 color = colors[2]
                 state = "recovered"
                 self.population[j].setColor(color) 
                 self.population[j].setState(state)
-            if j >= (self.susceptible + self.recovered) and j < (self.susceptible + self.recovered + self.infected):
+            elif j >= (self.susceptible + self.recovered) and j <= (self.susceptible + self.recovered + self.infected):
                 color = colors[3]
                 state = "infected"
-                self.population[i].setColor(color) 
-                self.population[i].setState(state) 
+                self.population[j].setColor(color) 
+                self.population[j].setState(state) 
                 self.population[j].setInitialLastInfected()
 
         # set up social distancing
@@ -324,9 +318,6 @@ class Population:
                 # set up "selfish"
                 if random.random() > self.percent_selfish:
                     self.population[k].setSocialDistance(self.social_distance)
-
-        for k in range(self.population_count):
-            print(self.population[k].getCommunityId())
 
     def addPerson(self, **kwargs):
         color = kwargs.get("color", random.choice(colors))
@@ -407,26 +398,15 @@ class Population:
                     self.recovered +=1
 
     def communityMove(self):
-        if random.random() < self.travel_rate:
-            # get random person to move
-            k = random.randint(0,(self.population_count - 1))
-
-            #print("before")
-            #self.population[k].printcoords()
-            #print(self.population[k].getCommunityId())
-            #print("after")
-
+        for k in range(self.population_count):
+            if random.random() < self.travel_rate:
                                                                                     # get new community number that is not equal to the community in now
-            new_community_id =  random.randint(0,self.numberOfCommunities-1)
-            while new_community_id == self.population[k].getCommunityId():          # make sure its not the same community
-                new_community_id = random.randint(0,self.numberOfCommunities-1)
-
-            self.population[k].setColor(colors[0])
-            new = Community()
-            new.changeBounds(self.numberOfCommunities,new_community_id,self.game_width,self.game_height)
-            self.population[k].changeCommunity(new)
-            self.population[k].printcoords()
-            print(self.population[k].getCommunityId())
+                new_community_id =  random.randint(0,self.numberOfCommunities-1)
+                while new_community_id == self.population[k].getCommunityId():          # make sure its not the same community
+                    new_community_id = random.randint(0,self.numberOfCommunities-1)
+                new = Community()
+                new.changeBounds(self.numberOfCommunities,new_community_id,self.game_width,self.game_height)
+                self.population[k].changeCommunity(new)
 
 #  /$$$$$$   /$$$$$$  /$$      /$$ /$$      /$$ /$$   /$$ /$$   /$$ /$$$$$$ /$$$$$$$$ /$$     /$$
 # /$$__  $$ /$$__  $$| $$$    /$$$| $$$    /$$$| $$  | $$| $$$ | $$|_  $$_/|__  $$__/|  $$   /$$/
@@ -574,18 +554,7 @@ class Community(object):
                 self.x1 = (width/4)*3
                 self.x2 = width
                 self.y1 = height/2
-                self.y2 = height
-
-#  /$$$$$$  /$$$$$$ /$$      /$$ /$$   /$$ /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
-# /$$__  $$|_  $$_/| $$$    /$$$| $$  | $$| $$       /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
-#| $$  \__/  | $$  | $$$$  /$$$$| $$  | $$| $$      | $$  \ $$   | $$     | $$  | $$  \ $$| $$$$| $$
-#|  $$$$$$   | $$  | $$ $$/$$ $$| $$  | $$| $$      | $$$$$$$$   | $$     | $$  | $$  | $$| $$ $$ $$
-# \____  $$  | $$  | $$  $$$| $$| $$  | $$| $$      | $$__  $$   | $$     | $$  | $$  | $$| $$  $$$$
-# /$$  \ $$  | $$  | $$\  $ | $$| $$  | $$| $$      | $$  | $$   | $$     | $$  | $$  | $$| $$\  $$$
-#|  $$$$$$/ /$$$$$$| $$ \/  | $$|  $$$$$$/| $$$$$$$$| $$  | $$   | $$    /$$$$$$|  $$$$$$/| $$ \  $$
-# \______/ |______/|__/     |__/ \______/ |________/|__/  |__/   |__/   |______/ \______/ |__/  \__/
-    
-
+                self.y2 = height 
 
 # /$$$$$$$$ /$$$$$$  /$$   /$$ /$$$$$$$$ /$$   /$$ /$$$$$$$$ /$$       /$$$$$$$  /$$$$$$$$ /$$$$$$$ 
 #| $$_____//$$__  $$| $$$ | $$|__  $$__/| $$  | $$| $$_____/| $$      | $$__  $$| $$_____/| $$__  $$
@@ -607,7 +576,7 @@ def messageDisplay(text,screen):
     pygame.display.update()
 
 def text_objects(text,font):
-    textSurface = font.render(text,True, (0,0,0))
+    textSurface = font.render(text,True, (255,255,255))
     return textSurface, textSurface.get_rect()
 
 def drawCommunities(communities,width,height,screen):
@@ -630,9 +599,14 @@ def drawCommunities(communities,width,height,screen):
         pygame.draw.line(screen,red,((width/4)*3,0),((width/4)*3,height),5)
         pygame.draw.line(screen,red,(0,height/2),(width,height/2),5)
 
-
-
-
+#  /$$$$$$  /$$$$$$ /$$      /$$ /$$   /$$ /$$        /$$$$$$  /$$$$$$$$ /$$$$$$  /$$$$$$  /$$   /$$
+# /$$__  $$|_  $$_/| $$$    /$$$| $$  | $$| $$       /$$__  $$|__  $$__/|_  $$_/ /$$__  $$| $$$ | $$
+#| $$  \__/  | $$  | $$$$  /$$$$| $$  | $$| $$      | $$  \ $$   | $$     | $$  | $$  \ $$| $$$$| $$
+#|  $$$$$$   | $$  | $$ $$/$$ $$| $$  | $$| $$      | $$$$$$$$   | $$     | $$  | $$  | $$| $$ $$ $$
+# \____  $$  | $$  | $$  $$$| $$| $$  | $$| $$      | $$__  $$   | $$     | $$  | $$  | $$| $$  $$$$
+# /$$  \ $$  | $$  | $$\  $ | $$| $$  | $$| $$      | $$  | $$   | $$     | $$  | $$  | $$| $$\  $$$
+#|  $$$$$$/ /$$$$$$| $$ \/  | $$|  $$$$$$/| $$$$$$$$| $$  | $$   | $$    /$$$$$$|  $$$$$$/| $$ \  $$
+# \______/ |______/|__/     |__/ \______/ |________/|__/  |__/   |__/   |______/ \______/ |__/  \__/
 
 # /$$      /$$  /$$$$$$  /$$$$$$ /$$   /$$
 #| $$$    /$$$ /$$__  $$|_  $$_/| $$$ | $$
@@ -644,6 +618,7 @@ def drawCommunities(communities,width,height,screen):
 #|__/     |__/|__/  |__/|______/|__/  \__/
 
 if __name__ == '__main__':
+    
     pygame.init()
     pygame.display.set_caption('Corona Virus') 
 
@@ -713,8 +688,9 @@ if __name__ == '__main__':
         pop.checkRecovery(config["game"]["day"])
 
         # controls days
-        if config["game"]["loop_count"] % config["game"]["day_ratio"] == 0:
+        if config["game"]["loop_count"] == config["game"]["day_ratio"]:
             config["game"]["day"] +=1
+            config["game"]["loop_count"] = 0
             print(config["game"]["day"])
             pop.communityMove()
 
