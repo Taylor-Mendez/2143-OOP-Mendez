@@ -21,11 +21,11 @@
         "fps": 40,
         "loop_count": 0,
         "day_ratio": 50,
-        "communities": 2   
+        "communities": 4   
     },
     "sim": {
-        "social_distancing": true,
-        "social_distance": 3,
+        "social_distancing": false,
+        "social_distance": 4,
         "infection_radius": 14,
         "infection_rate": 0.25,
         "population_count": 100,

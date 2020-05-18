@@ -97,12 +97,34 @@ class Person(pygame.sprite.Sprite):
     def setSocialDistance(self,distance):
         self.rect = self.rect.inflate(distance,distance)
 
+#___________________________________________________________________________
+# Description: gets the day that the sprite was infected
+#
+# Params: enon
+#
+# returns: none
+#____________________________________________________________________________ 
     def getLastInfected(self):
         return (self.last_infected)
 
+#___________________________________________________________________________
+# Description: sets the day that the sprite was infected
+#
+# Params: the day of the simulation
+#
+# returns: none
+#____________________________________________________________________________ 
     def setLastInfected(self,num):
-        self.last_infected = num 
+        self.last_infected = num  
 
+#___________________________________________________________________________
+# Description: sets the day infected of sprite who were initially infected to
+#              day 0
+#
+# Params: none
+#
+# returns: none
+#____________________________________________________________________________ 
     def setInitialLastInfected(self):
         self.last_infected = 0
 
@@ -183,6 +205,15 @@ class Person(pygame.sprite.Sprite):
 
         return False
 
+#___________________________________________________________________________
+# Description: gets the distance between two sprites
+#
+# Params: instance of another sprite, the social distance, and the infection 
+#         radius
+#
+# returns: bool (true indicates that the distance between the two sprites
+#          was less than the social distance))
+#____________________________________________________________________________
     def checkSocialDistace(self,other, social_distance,infection_radius):
         # get distance
         x1,y1 = self.rect.center
@@ -207,7 +238,15 @@ class Person(pygame.sprite.Sprite):
             sides["bottom"] = True
 
         return sides
-    
+
+#___________________________________________________________________________
+# Description: gives the sprite a new community and changes the bounds in
+#              which it can travel and community_id accordingly
+#
+# Params: a new Community
+#
+# returns: none
+#____________________________________________________________________________    
     def changeCommunity(self,community):
         self.community = community
 
@@ -220,6 +259,13 @@ class Person(pygame.sprite.Sprite):
         self.y = random.randint(int(self.community.gety1()), int(self.community.gety2()))
         self.community_id = self.community.getCommunityId()
 
+#___________________________________________________________________________
+# Description: gets the community_id of the sprite
+#
+# Params: none
+#
+# returns: community_id of the sprite
+#____________________________________________________________________________ 
     def getCommunityId(self):
         return self.community_id
 
@@ -276,9 +322,19 @@ class Population:
     def getRecovered(self):
         return(self.recovered)
 
+#___________________________________________________________________________
+# Description: Sets up people into communities. Changes the state and color 
+#              of each sprite based on the initial number of susceptible, 
+#              infected, and recovered. Sets up the number of people who 
+#              adhere to social distancing based on percent_selfish
+#
+# Params: 
+#
+# returns: none
+#____________________________________________________________________________ 
     def populate(self, pos=None, **kwargs):
 
-        # need to figure out a better way to assign bounds to communities and people
+        # need to figure out a better way to assign bounds communities to people
         for i in range(self.population_count):
             if self.numberOfCommunities > 0:
                 community = Community()
@@ -292,25 +348,7 @@ class Population:
                 community.changeBounds(self.numberOfCommunities,community_id,self.game_width,self.game_height)
                 self.addPerson(community=community)
 
-        # set initial number of specific states
-        # for j in range(self.population_count):
-        #     if j < self.susceptible:
-        #         color = colors[4]
-        #         state = "susceptible"
-        #         self.population[j].setColor(color) 
-        #         self.population[j].setState(state)
-        #     elif j >= self.susceptible and j < (self.susceptible + self.recovered):
-        #         color = colors[2]
-        #         state = "recovered"
-        #         self.population[j].setColor(color) 
-        #         self.population[j].setState(state)
-        #     elif j >= (self.susceptible + self.recovered) and j <= (self.susceptible + self.recovered + self.infected):
-        #         color = colors[3]
-        #         state = "infected"
-        #         self.population[j].setColor(color) 
-        #         self.population[j].setState(state) 
-        #         self.population[j].setInitialLastInfected()
-
+        # sets up initial infected, susceptible, infected
         for j in range(self.population_count):
             if j < int(self.population_count * config["sim"]["initial_recovered_ratio"]):
                 self.population[j].setColor(colors[2])
@@ -330,6 +368,13 @@ class Population:
                 if random.random() > self.percent_selfish:
                     self.population[k].setSocialDistance(self.social_distance)
 
+#___________________________________________________________________________
+# Description: adds a person to the population
+#
+# Params: can take color, state, width, height, speed, community, coords
+#
+# returns: none
+#____________________________________________________________________________ 
     def addPerson(self, **kwargs):
         color = kwargs.get("color", random.choice(colors))
         state = kwargs.get("state","susceptible")
@@ -353,6 +398,17 @@ class Population:
         self.population.append(p)
         self.sprite_group.add(p)
 
+#___________________________________________________________________________
+# Description: Moves the population and checks if they have collided,
+#              takes into account the rate of infection, and the infection
+#              radius(if social distancing is true) when deciding whether or 
+#              not a person has been infected. If a person has been infected 
+#              then state and color are changed
+#
+# Params: day of the simulation
+#
+# returns: none
+#____________________________________________________________________________ 
     def populationMove(self,day):
         # loop through each person and call a move method
         for i in range(len(self.population)):
@@ -399,6 +455,14 @@ class Population:
         
         self.sprite_group.draw(self.screen)
 
+#___________________________________________________________________________
+# Description: checks if anyone in the population has recovered based on the 
+#              day they were infected and the current day of the simulation
+#
+# Params: the day of the simulation
+#
+# returns: none
+#____________________________________________________________________________ 
     def checkRecovery(self,day):
         for i in range(self.population_count):
             if "infected" in self.population[i].getState():
@@ -408,6 +472,16 @@ class Population:
                     self.infected -= 1
                     self.recovered +=1
 
+#___________________________________________________________________________
+# Description: Loops through the community checking to see if anyone has
+#              "decided" to travel. Basically loops through the population
+#              and moves them to a different community based on the 
+#              travel_rate 
+#
+# Params: none
+#
+# returns: none
+#____________________________________________________________________________ 
     def communityMove(self):
         for k in range(self.population_count):
             if random.random() < self.travel_rate:
@@ -454,6 +528,18 @@ class Community(object):
         return self.y2
     def getCommunityId(self):
         return self.community_id
+
+#________________________________________________________________________________
+# Description: sets up community bounds (i.e. x1,x2,y1,y2) based on the
+#              number of communities passed in. The way that community bounds are
+#              set up could be done better but couldn't think of another way at the 
+#              moment
+#
+# Params: total number of communities, community id, width (which is the 
+#         game width), height (which is the game height)
+#
+# returns: none
+#_________________________________________________________________________________ 
     def changeBounds(self,total,community_id,width,height):
         self.community_id = community_id
 
@@ -639,6 +725,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(
         [config["game"]["width"], config["game"]["height"]])
 
+    # Set up the population
     pop = Population(screen=screen,
                      width=config["game"]["width"],
                      height=config["game"]["height"],
@@ -652,7 +739,7 @@ if __name__ == '__main__':
                      infection_radius=config["sim"]["infection_radius"],
                      travel_rate=config["sim"]["travel_rate"])
 
-
+    # Add people to the population
     pop.populate()
 
     # helps keep game loop running at
@@ -676,11 +763,13 @@ if __name__ == '__main__':
 
         #___CONTROL SIMULATION HERE_____________________________________________________________
 
-        # drawing rectangles
+        # draws community bounds
         drawCommunities(config["game"]["communities"],config["game"]["width"],config["game"]["height"],screen)
 
+        # moves the community
         pop.populationMove(config["game"]["day"])
 
+        # displays the the number of people susceptible, infected, and recovered to the screen
         message = "susceptible:" + str(pop.getSusceptible()) + "  infected:" + str(pop.getInfected()) + "  recovered:" + str(pop.getRecovered())
         messageDisplay(message,screen)
 
@@ -695,7 +784,7 @@ if __name__ == '__main__':
         # check to see if people have recovered after every game loop
         pop.checkRecovery(config["game"]["day"])
 
-        # controls days
+        # controls  and updates days
         if config["game"]["loop_count"] == config["game"]["day_ratio"]:
             config["game"]["day"] +=1
             config["game"]["loop_count"] = 0
